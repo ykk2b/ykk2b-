@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/globe.gl"></script>
+        <script src="https://unpkg.com/topojson-client"></script>
+        <meta name="title" content="ykk2b" />
+        <meta name="description" content="ykk2b personal website" />
+        <meta
+            name="keywords"
+            content="ykk2b, ykk, programmer, web developer, rust, rust developer, software developer, portfolip, personal website, portfolio website"
+        />
+        <meta name="robots" content="index, follow" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="language" content="English" />
+        <meta name="author" content="ykk2b" />
+        <title>ykk2b | home</title>
+    </head>
+    <body class="bg-black text-white font-mono flex overflow-x-hidden">
+        <aside class="p-2 h-screen fixed w-36 z-10 text-center">
+            <h1 class="text-4xl font-bold">ykk2b</h1>
+            <ul
+                class="text-xl font-semibold flex flex-col gap-y-4 mt-4 bg-black rounded-lg"
+            >
+                <li>
+                    <a
+                        href="./coding.html"
+                        class="underline hover:text-green-400 transition-color duration-500"
+                        >coding</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="#"
+                        class="underline hover:text-purple-500 transition-color duration-500"
+                        >astro</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="#"
+                        class="underline hover:text-pink-400 transition-color duration-500"
+                        >music</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="#"
+                        class="underline hover:text-blue-500 transition-color duration-500"
+                        >tv</a
+                    >
+                </li>
+            </ul>
+        </aside>
+        <div id="globeViz" class="z-2 w-screen h-screen"></div>
+        <div
+            class="z-0 w-screen h-screen flex justify-center items-center text-4xl font-bold"
+        >
+            Loading...
+        </div>
+    </body>
+
+    <script type="module">
+        import * as THREE from "https://unpkg.com/three/build/three.module.js";
+        let world = Globe()
+            .backgroundColor("rgba(0,0,0,0)")
+            .backgroundImageUrl(
+                "https://unpkg.com/three-globe/example/img/night-sky.png",
+            )
+            .onGlobeClick(() => {
+                world.atmosphereColor("green");
+                world.atmosphereAltitude(0.5);
+            })
+            .atmosphereColor("white")
+            .atmosphereAltitude(0.2)
+            .backgroundColor("#000000")
+            .showAtmosphere(true)
+            .showGraticules(true)(document.getElementById("globeViz"));
+
+        fetch("https://unpkg.com/world-atlas/land-110m.json")
+            .then((res) => res.json())
+            .then((landTopo) => {
+                world
+                    .polygonsData(
+                        topojson.feature(landTopo, landTopo.objects.land)
+                            .features,
+                    )
+                    .polygonCapMaterial(
+                        new THREE.MeshLambertMaterial({
+                            color: "white",
+                            side: THREE.DoubleSide,
+                        }),
+                    )
+                    .polygonSideColor(() => "rgba(0,0,0,0)");
+            });
+    </script>
+</html>
